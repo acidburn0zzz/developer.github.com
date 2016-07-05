@@ -1,10 +1,9 @@
 ---
-title: Git Tags | GitHub API
+title: Git Tags
 ---
 
 # Tags
 
-* TOC
 {:toc}
 
 This tags API only deals with tag objects - so only annotated tags, not
@@ -39,9 +38,9 @@ Name | Type | Description
 `message`|`string`| The tag message
 `object`|`string`| The SHA of the git object this is tagging
 `type`|`string`| The type of the object we're tagging. Normally this is a `commit` but it can also be a `tree` or a `blob`.
-`tagger`|`hash`| A hash with information about the individual creating the tag.
+`tagger`|`object`| An object with information about the individual creating the tag.
 
-The `tagger` hash contains the following keys:
+The `tagger` object contains the following keys:
 
 Name | Type | Description
 -----|------|--------------
@@ -62,6 +61,31 @@ Name | Type | Description
 
 ### Response
 
-<%= headers 201,
-      :Location => "https://api.github.com/repos/octocat/Hello-World/git/tags/940bd336248efae0f9ee5bc7b2d5c985887b16ac" %>
+<%= headers 201, :Location => get_resource(:gittag)['url'] %>
 <%= json :gittag %>
+
+{% if page.version == 'dotcom' %}
+
+## Tag signature verification
+
+{{#tip}}
+
+Tag response objects including signature verification data are currently available for developers to preview.
+During the preview period, the object formats may change without advance notice.
+Please see the [blog post](/changes/2016-04-04-git-signing-api-preview) for full details.
+
+To receive signature verification data in tag objects you must provide a custom [media type](/v3/media) in the `Accept` header:
+
+    application/vnd.github.cryptographer-preview+sha
+
+{{/tip}}
+
+    GET /repos/:owner/:repo/git/tags/:sha
+
+### Response
+
+<%= headers 200 %>
+<%= json(:signed_gittag) %>
+
+
+{% endif %}

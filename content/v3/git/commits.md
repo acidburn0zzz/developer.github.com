@@ -1,10 +1,9 @@
 ---
-title: Git Commits | GitHub API
+title: Git Commits
 ---
 
 # Commits
 
-* TOC
 {:toc}
 
 ## Get a Commit
@@ -31,20 +30,20 @@ Name | Type | Description
 
 ### Optional Parameters
 
-You can provide an additional `commiter` parameter, which is a hash containing
+You can provide an additional `committer` parameter, which is an object containing
 information about the committer. Or, you can provide an `author` parameter, which
-is a hash containing information about the author.
+is an object containing information about the author.
 
 The `committer` section is optional and will be filled with the `author`
 data if omitted. If the `author` section is omitted, it will be filled
 in with the authenticated user's information and the current date.
 
-Both the `author` and `commiter` parameters have the same keys:
+Both the `author` and `committer` parameters have the same keys:
 
 Name | Type | Description
 -----|------|-------------
-`name`|`string` | The name of the author (or commiter) of the commit
-`email`|`string` | The email of the author (or commiter) of the commit
+`name`|`string` | The name of the author (or committer) of the commit
+`email`|`string` | The email of the author (or committer) of the commit
 `date`|`string` | Indicates when this commit was authored (or committed). This is a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
 
 ### Example Input
@@ -58,6 +57,30 @@ Name | Type | Description
 
 ### Response
 
-<%= headers 201,
-      :Location => "https://api.github.com/repos/octocat/Hello-World/git/commits/7638417db6d59f3c431d3e1f261cc637155684cd" %>
+<%= headers 201, :Location => get_resource(:new_commit)['url'] %>
 <%= json :new_commit %>
+
+{% if page.version == 'dotcom' %}
+
+## Commit signature verification
+
+{{#tip}}
+
+Commit response objects including signature verification data are currently available for developers to preview.
+During the preview period, the object formats may change without advance notice.
+Please see the [blog post](/changes/2016-04-04-git-signing-api-preview) for full details.
+
+To receive signature verification data in commit objects you must provide a custom [media type](/v3/media) in the `Accept` header:
+
+    application/vnd.github.cryptographer-preview+sha
+
+{{/tip}}
+
+    GET /repos/:owner/:repo/git/commits/:sha
+
+### Response
+
+<%= headers 200 %>
+<%= json(:signed_git_commit) %>
+
+{% endif %}

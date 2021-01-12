@@ -30,7 +30,7 @@ GEM
       mini_portile (~> 0.5.0)
     pygments.rb (0.2.3)
       rubypython (>= 0.5.1)
-    rack (1.5.2)
+    rack (1.6.13)
     rake (0.9.6)
     rubypython (0.6.3)
       blankslate (>= 2.1.2.3)
